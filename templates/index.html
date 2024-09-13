@@ -1,20 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Калькулятор квадратного корня</title>
-  </head>
-  <body>
-    <h1>Калькулятор квадратного корня</h1>
+</head>
+<body>
+    <h1>Калькулятор квадратного корня (комплексные числа)</h1>
     <form method="POST">
-      <label for="number">Введите число:</label>
-      <input type="text" id="number" name="number" required />
-      <button type="submit">Рассчитать</button>
+        <label for="number">Введите число (например, 4 или 3+2j):</label>
+        <input type="text" id="number" name="number" required>
+        <button type="submit">Рассчитать</button>
     </form>
-
+    
     {% if result is not none %}
-    <h2>Результат: {{ result }}</h2>
+        <h2>Результат: {{ result }}</h2>
     {% endif %}
-  </body>
+</body>
 </html>
+
