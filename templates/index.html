@@ -1,21 +1,86 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ lang }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Калькулятор квадратного корня</title>
+    <title>{{ language.title }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 110vh;
+            margin: 0;
+            background-color: #cadfd7;
+        }
+        .container {
+            text-align: center;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #007BFF;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .lang-buttons {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .lang-buttons a {
+            margin: 0 5px;
+            text-decoration: none;
+            color: #007BFF;
+        }
+        .lang-buttons a:hover {
+            text-decoration: underline;
+        }
+        .support {
+            position: absolute;
+            bottom: -80px;
+            left: 45px;
+            font-size: 1.3em;
+            color: #555;
+        }
+    </style>
 </head>
 <body>
-    <h1>Калькулятор квадратного корня (комплексные числа)</h1>
-    <form method="POST">
-        <label for="number">Введите число (например, 4 или 3+2j):</label>
-        <input type="text" id="number" name="number" required>
-        <button type="submit">Рассчитать</button>
-    </form>
-    
-    {% if result is not none %}
-        <h2>Результат: {{ result }}</h2>
-    {% endif %}
+    <div class="container">
+        <h1>{{ language.title }}</h1>
+        <form method="POST">
+            <input type="text" name="number" placeholder="{{ language.input_placeholder }}" required>
+            <input type="text" name="precision" placeholder="{{ language.precision_placeholder }}">
+            <button type="submit">{{ language.submit }}</button>
+        </form>
+        {% if result %}
+            <p>{{ language.result_label }}: {{ result }}</p>
+        {% endif %}
+        <div class="lang-buttons">
+            <a href="{{ url_for('index', lang='ru') }}">Рус</a>
+            <a href="{{ url_for('index', lang='en') }}">Eng</a>
+            <a href="{{ url_for('index', lang='es') }}">Esp</a>
+        </div>
+        <div class="support">
+            <p>{{ language.support }}: {{ language.email }}</p>
+        </div>
+    </div>
 </body>
 </html>
-
