@@ -10,7 +10,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 120vh;
+            height: 110vh;
             margin: 0;
             background-color: #cadfd7;
         }
@@ -49,7 +49,6 @@
             margin: 0 5px;
             text-decoration: none;
             color: #007BFF;
-            cursor: pointer;
         }
         .lang-buttons a:hover {
             text-decoration: underline;
@@ -61,34 +60,17 @@
             font-size: 1.3em;
             color: #555;
         }
-        .function-buttons {
-            margin-top: 15px;
+        .functions {
+            margin: 15px 0;
         }
-        .function-buttons button {
+        .functions button {
             margin: 5px;
+            padding: 8px;
         }
     </style>
     <script>
-        // Функция для вставки значения в поле ввода
-        function insertValue(value) {
-            document.querySelector('input[name="number"]').value += value;
-        }
-
-        // Функция для смены языка через AJAX
-        function changeLanguage(lang) {
-            fetch(`/change_language/${lang}`, {
-                method: 'GET',
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Обновляем элементы страницы на выбранном языке
-                document.querySelector('h1').innerText = data.title;
-                document.querySelector('input[name="number"]').placeholder = data.input_placeholder;
-                document.querySelector('input[name="precision"]').placeholder = data.precision_placeholder;
-                document.querySelector('button[type="submit"]').innerText = data.submit;
-                document.querySelector('.support p').innerText = `${data.support}: ${data.email}`;
-            })
-            .catch(error => console.error('Ошибка при смене языка:', error));
+        function insertText(value) {
+            document.getElementById('number-input').value += value;
         }
     </script>
 </head>
@@ -96,28 +78,25 @@
     <div class="container">
         <h1>{{ language.title }}</h1>
         <form method="POST">
-            <input type="text" name="number" placeholder="{{ language.input_placeholder }}">
+            <input id="number-input" type="text" name="number" placeholder="{{ language.input_placeholder }}" required>
             <input type="text" name="precision" placeholder="{{ language.precision_placeholder }}">
+            <div class="functions">
+                <button type="button" onclick="insertText('sin(')">sin</button>
+                <button type="button" onclick="insertText('cos(')">cos</button>
+                <button type="button" onclick="insertText('tan(')">tan</button>
+                <button type="button" onclick="insertText('ctg(')">ctg</button>
+                <button type="button" onclick="insertText('pi')">π</button>
+                <button type="button" onclick="insertText('^2')">x²</button>
+            </div>
             <button type="submit">{{ language.submit }}</button>
         </form>
         {% if result %}
             <p>{{ language.result_label }}: {{ result }}</p>
         {% endif %}
-        
-        <!-- Кнопки для вставки функций -->
-        <div class="function-buttons">
-            <button type="button" onclick="insertValue('sin(')">sin</button>
-            <button type="button" onclick="insertValue('cos(')">cos</button>
-            <button type="button" onclick="insertValue('tan(')">tan</button>
-            <button type="button" onclick="insertValue('ctg(')">ctg</button>
-            <button type="button" onclick="insertValue('pi')">π</button>
-            <button type="button" onclick="insertValue('^2')">x²</button>
-        </div>
-
         <div class="lang-buttons">
-            <a onclick="changeLanguage('ru')">Рус</a>
-            <a onclick="changeLanguage('en')">Eng</a>
-            <a onclick="changeLanguage('es')">Esp</a>
+            <a href="{{ url_for('index', lang='ru') }}">Рус</a>
+            <a href="{{ url_for('index', lang='en') }}">Eng</a>
+            <a href="{{ url_for('index', lang='es') }}">Esp</a>
         </div>
         <div class="support">
             <p>{{ language.support }}: {{ language.email }}</p>

@@ -9,7 +9,7 @@ app = Flask(__name__)
 languages = {
     "ru": {
         "title": "Квадратный корень числа",
-        "input_placeholder": "Введите число, например, 2+3j или -4 или sin(3*pi/2)",
+        "input_placeholder": "Введите число, например, 2+3j или -4",
         "precision_placeholder": "Введите точность (необязательно)",
         "submit": "Рассчитать",
         "result_label": "Результат",
@@ -19,7 +19,7 @@ languages = {
     },
     "en": {
         "title": "Square Root of a Number",
-        "input_placeholder": "Enter a number, e.g., 2+3j or -4 or sin(3*pi/2)",
+        "input_placeholder": "Enter a number, e.g., 2+3j or -4",
         "precision_placeholder": "Enter precision (optional)",
         "submit": "Calculate",
         "result_label": "Result",
@@ -29,7 +29,7 @@ languages = {
     },
     "es": {
         "title": "Raíz Cuadrada de un Número",
-        "input_placeholder": "Ingrese un número, p.ej., 2+3j o -4 o sin(3*pi/2)",
+        "input_placeholder": "Ingrese un número, p.ej., 2+3j o -4",
         "precision_placeholder": "Ingrese la precisión (opcional)",
         "submit": "Calcular",
         "result_label": "Resultado",
@@ -120,7 +120,7 @@ def index(lang="ru"):
         except ValueError:
             result = language["error"]
         except Exception as e:
-            result = language["error"]
+            result = f"Ошибка: {str(e)}"
 
     return render_template("index.html", result=result, lang=lang, language=language)
 
