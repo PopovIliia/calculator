@@ -67,10 +67,26 @@
             margin: 5px;
             padding: 8px;
         }
+        #instruction {
+            display: none;
+            margin-top: 15px;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+        }
     </style>
     <script>
         function insertText(value) {
             document.getElementById('number-input').value += value;
+        }
+        function toggleInstruction() {
+            var instructionDiv = document.getElementById('instruction');
+            if (instructionDiv.style.display === "none") {
+                instructionDiv.style.display = "block";
+            } else {
+                instructionDiv.style.display = "none";
+            }
         }
     </script>
 </head>
@@ -78,7 +94,7 @@
     <div class="container">
         <h1>{{ language.title }}</h1>
         <form method="POST">
-            <input id="number-input" type="text" name="number" placeholder="{{ language.input_placeholder }}" required>
+            <input id="number-input" type="text" name="number" placeholder="{{ language.input_placeholder }}">
             <input type="text" name="precision" placeholder="{{ language.precision_placeholder }}">
             <div class="functions">
                 <button type="button" onclick="insertText('sin(')">sin</button>
@@ -100,6 +116,10 @@
         </div>
         <div class="support">
             <p>{{ language.support }}: {{ language.email }}</p>
+        </div>
+        <button type="button" onclick="toggleInstruction()">{{ language.instruction_button }}</button>
+        <div id="instruction">
+            <p>{{ language.instruction|safe }}</p>
         </div>
     </div>
 </body>
