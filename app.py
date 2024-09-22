@@ -8,36 +8,76 @@ app = Flask(__name__)
 # Данные для языков
 languages = {
     "ru": {
-        "title": "Квадратный корень числа",
-        "input_placeholder": "Введите число, например, 2+3j или -4 или sin(3*pi/2)",
+        "title": "Извлечение квадратного корня",
+        "input_placeholder": "Введите число, например, 2+3j , -4 или sin(2*pi/3)",
         "precision_placeholder": "Введите точность (необязательно)",
         "submit": "Рассчитать",
         "result_label": "Результат",
-        "error": "Пожалуйста, введите корректное число.",
+        "error": "Введите латинскую букву, корректное число или тригонометрическое выражение.",
         "support": "Почта техподдержки сайта",
         "email": "tdpopov@edu.hse.ru",
+        "instruction_button": "Инструкция",
+        "instruction": "<ul>"
+                       "<li>Введите латинскую букву, корректное число или тригонометрическое выражение.</li>"
+                       "<li>Примеры:</li>"
+                       "<ul>"
+                       "<li>Простое число: 4</li>"
+                       "<li>Комплексное число: 2+3j</li>"
+                       "<li>Отрицательное число: -4</li>"
+                       "<li>Тригонометрическое выражение: sin(2*pi/3)</li>"
+                       "<li>Переменная: a</li>"
+                       "<li>Переменная в квадрате: t^2</li>"
+                       "</ul>"
+                       "</ul>",
     },
     "en": {
-        "title": "Square Root of a Number",
-        "input_placeholder": "Enter a number, e.g., 2+3j or -4 or sin(3*pi/2)",
+        "title": "Extracting the square root",
+        "input_placeholder": "Enter a number, e.g., 2+3j , -4 or sin(2*pi/3)",
         "precision_placeholder": "Enter precision (optional)",
         "submit": "Calculate",
         "result_label": "Result",
-        "error": "Please enter a valid number.",
+        "error": "Enter a Latin letter, a valid number, or a trigonometric expression.",
         "support": "Technical Support mail site",
         "email": "tdpopov@edu.hse.ru",
+        "instruction_button": "Instructions",
+        "instruction": "<ul>"
+                       "<li>Enter a Latin letter, a valid number, or a trigonometric expression.</li>"
+                       "<li>Examples:</li>"
+                       "<ul>"
+                       "<li>Simple number: 4</li>"
+                       "<li>Complex number: 2+3j</li>"
+                       "<li>Negative number: -4</li>"
+                       "<li>Trigonometric expression: sin(2*pi/3)</li>"
+                       "<li>Variable: a</li>"
+                       "<li>Variable squared: t^2</li>"
+                       "</ul>"
+                       "</ul>",
     },
     "es": {
-        "title": "Raíz Cuadrada de un Número",
-        "input_placeholder": "Ingrese un número, p.ej., 2+3j o -4 o sin(3*pi/2)",
+        "title": "Extracción de raíz cuadrada",
+        "input_placeholder": "Ingrese un número, p.ej., 2+3j , -4 o sin(2*pi/3)",
         "precision_placeholder": "Ingrese la precisión (opcional)",
         "submit": "Calcular",
         "result_label": "Resultado",
-        "error": "Por favor, ingrese un número válido.",
+        "error": "Ingrese una letra latina, un número válido o una expresión trigonométrica.",
         "support": "Soporte del sitio web",
         "email": "tdpopov@edu.hse.ru",
+        "instruction_button": "Instrucciones",
+        "instruction": "<ul>"
+                       "<li>Ingrese una letra latina, un número válido o una expresión trigonométrica.</li>"
+                       "<li>Ejemplos:</li>"
+                       "<ul>"
+                       "<li>Número simple: 4</li>"
+                       "<li>Número complejo: 2+3j</li>"
+                       "<li>Número negativo: -4</li>"
+                       "<li>Expresión trigonométrica: sin(2*pi/3)</li>"
+                       "<li>Variable: a</li>"
+                       "<li>Variable al cuadrado: t^2</li>"
+                       "</ul>"
+                       "</ul>",
     }
 }
+
 
 def near_zero(value, threshold=1e-10):
     """Проверяем, является ли число близким к нулю."""
@@ -45,15 +85,12 @@ def near_zero(value, threshold=1e-10):
 
 def process_input(input_value):
     """Обрабатываем ввод: преобразуем ^ в ** и обрабатываем переменные."""
-    # Заменяем ^ на ** для операций возведения в степень
     input_value = input_value.replace("^", "**")
     
-    # Проверка на наличие переменной в выражении
-    if re.match(r"^[a-zA-Z]\*\*2$", input_value):  # Обрабатываем выражения вида a^2
-        variable = input_value[0]  # Извлекаем переменную
+    if re.match(r"^[a-zA-Z]\*\*2$", input_value):
+        variable = input_value[0]
         return f"±{variable}"
     
-    # Если это обычное число или выражение
     return str(eval(input_value, {"sin": math.sin, "cos": math.cos, "tan": math.tan, "ctg": lambda x: 1 / math.tan(x), "pi": math.pi, "e": math.e}))
 
 @app.route("/", methods=["GET", "POST"])
@@ -68,17 +105,13 @@ def index(lang="ru"):
             precision_value = request.form.get("precision")
             precision = int(precision_value) if precision_value else None
 
-            # Обрабатываем вводимое выражение
             processed_value = process_input(input_value)
             
-            # Если результат это переменная (±a), сразу выводим его
             if "±" in processed_value:
                 result = f"√{input_value} = {processed_value}"
             else:
-                # Преобразуем строку в комплексное число
                 complex_number = complex(processed_value)
                 
-                # Проверка на малые значения, близкие к нулю
                 if near_zero(complex_number.real):
                     complex_number = complex(0, complex_number.imag)
                 if near_zero(complex_number.imag):
@@ -86,7 +119,6 @@ def index(lang="ru"):
                 
                 is_real = complex_number.imag == 0
 
-                # Для отрицательных действительных чисел выводим комплексный корень
                 if is_real and complex_number.real < 0:
                     root1 = cmath.sqrt(complex_number)
                     root2 = -root1
@@ -94,7 +126,6 @@ def index(lang="ru"):
                     root1 = cmath.sqrt(complex_number)
                     root2 = -root1
 
-                # Форматируем результат
                 def format_complex(number):
                     real = number.real if precision is None else round(number.real, precision)
                     imag = number.imag if precision is None else round(number.imag, precision)
@@ -115,12 +146,12 @@ def index(lang="ru"):
                 if is_real:
                     result = f"√{input_value} = ±{format_complex(root1)}"
                 else:
-                    result = f"√{input_value} = {format_complex(root1)}"
+                    result = f"√{input_value} = +-({format_complex(root1)})"
             
         except ValueError:
             result = language["error"]
         except Exception as e:
-            result = f"Ошибка: {str(e)}"
+            result = language["error"]
 
     return render_template("index.html", result=result, lang=lang, language=language)
 
